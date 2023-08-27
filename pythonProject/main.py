@@ -1,9 +1,18 @@
 from kivy.app import App
-from kivy.uix.label import Label
+from kivy.uix.screenmanager import ScreenManager, Screen
 
-class HelloWorldApp(App):
+class MenuScreen(Screen):
+    pass
+
+class SettingsScreen(Screen):
+    pass
+
+class MyApp(App):
     def build(self):
-        return Label(text="Hello, Kivy!")
+        sm = ScreenManager()
+        sm.add_widget(MenuScreen(name='menu'))
+        sm.add_widget(SettingsScreen(name='settings'))
+        return sm
 
 if __name__ == '__main__':
-    HelloWorldApp().run()
+    MyApp().run()
