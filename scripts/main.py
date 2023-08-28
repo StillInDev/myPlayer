@@ -1,22 +1,22 @@
 import os
+
 import pygame
 import sounddevice
 import soundfile
 import time
-import numpy as np
 
-from pydub import AudioSegment
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 # Holds all songs
 song_list = []
 
+# Variables
+SAMPLE_RATE = 44100 * 1.0925  # -> Standard is 44.1 kHz
+# Rate for Fair Trade = 44100*1.0925
 index = 0
 
 '''#---------------SCREENS---------------#'''
-
-
 class MenuScreen(Screen):
     pass
 
@@ -24,6 +24,8 @@ class MenuScreen(Screen):
 class SettingsScreen(Screen):
     pass
 
+class LibraryScreen(Screen):
+    pass
 
 class PlayScreen(Screen):
     # SO WE NEED TO KEEP TRACK OF WHERE YOU LEFT OFF IN LAST PLAYLIST
@@ -32,54 +34,72 @@ class PlayScreen(Screen):
         self.start_time = None
         self.playing = False  # Track play/pause state
         self.played = False
-        # self.curr_song = AudioSegment.from_file(song_list[index])
         self.playback_data = None
         self.playback_position = 0
+        self.dex = index
+        self.song_list = song_list
+        self.reload = True
+
+    def skip_song(self):
+        # If you reach the end of the song_list
+        self.reload = True
+        if len(self.song_list) <= self.dex + 1:
+            self.dex = 0
+        # Just add one
+        else:
+            self.dex += 1
+        self.play_song()
+
+    def back_song(self):
+        self.reload = True
+        if 0 >= self.dex:
+            self.dex = len(self.song_list) - 1
+        # Just add one
+        else:
+            self.dex -= 1
+        self.play_song()
 
     def load_song(self):
         pygame.mixer.init()
-        pygame.mixer.music.load(song_list[index])
+        pygame.mixer.music.load(self.song_list[self.dex])
 
         # Load audio data for precise playback control
-        self.playback_data, _ = soundfile.read(song_list[index], dtype='int16')
-
-    # def play_song(self):
-        # if not self.playing:
-        #     self.playing = True
-        #     self.ids.play_button.text = 'Pause'
-        #     self.ids.play_button.background_color = 1, 0, 0, 1  # Red for pause state
-        #
-        #     if not self.playback_data is None:
-        #         self.load_song()
-        #
-        #     self.start_time = time.time()
-        #     sounddevice.play(self.playback_data[self.playback_position:], 44100)
-        # else:
-        #     self.playing = False
-        #     self.ids.play_button.text = 'Play'
-        #     self.ids.play_button.background_color = 0, 1, 0, 1  # Green for play state
-        #
-        #     elapsed_time = time.time() - self.start_time
-        #     self.playback_position += int(elapsed_time * 44100)  # Convert to samples
-        #     sounddevice.stop()
+        self.playback_data, _ = soundfile.read(self.song_list[self.dex], dtype='int16')
 
     def play_song(self):
-
+        print('start', self.start_time)
         if not self.playing:
             # MIGHT HAVE AN ISSUE WITH A CHANGE IN SONG
             self.playing = True
             self.ids.play_button.text = 'Pause'
             self.ids.play_button.background_color = 1, 0, 0, 1  # Red for pause state
 
-            pygame.mixer.init()
-            pygame.mixer.music.load(song_list[index])
-            pygame.mixer.music.play()
+            if self.playback_data is None or self.reload:
+                self.reload = False
+                self.load_song()
+
+            self.start_time = time.time() - self.playback_position / SAMPLE_RATE
+            sounddevice.play(self.playback_data[self.playback_position:], SAMPLE_RATE)
         else:
             self.playing = False
             self.ids.play_button.text = 'Play'
             self.ids.play_button.background_color = 0, 1, 0, 1  # Green for play state
 
-            pygame.mixer.music.stop()
+            elapsed_time = time.time() - self.start_time
+            self.playback_position += int(elapsed_time * SAMPLE_RATE)  # Convert to samples
+            sounddevice.stop()
+
+    def update_time(self):
+        if self.playing:
+            elapsed_time = time.time() - self.start_time
+            self.playback_position += int(elapsed_time * SAMPLE_RATE)  # Convert to samples
+            self.start_time = time.time()
+
+    def on_playback_position(self, dt):
+        self.update_time()
+        if self.playing:
+            print("Elapsed Time:", self.playback_position / SAMPLE_RATE)
+
 
 
 # Main class
@@ -94,12 +114,9 @@ class MyApp(App):
         sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(SettingsScreen(name='settings'))
         sm.add_widget(PlayScreen(name='play'))
+        sm.add_widget(LibraryScreen(name='library'))
 
         return sm
-
-        # Wait for the song to finish playing
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
 
 
 def build_song_list(self):
