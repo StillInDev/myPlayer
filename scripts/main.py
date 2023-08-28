@@ -14,6 +14,7 @@ from myPlayer.myPlayer.scripts.songs import Song
 
 # Holds all songs
 song_list = []
+library_pages = []
 
 # Variables
 SAMPLE_RATE = 44100 * 1.0925  # -> Standard is 44.1 kHz
@@ -21,6 +22,8 @@ SAMPLE_RATE = 44100 * 1.0925  # -> Standard is 44.1 kHz
 index = 0
 
 '''#---------------SCREENS---------------#'''
+
+
 class MenuScreen(Screen):
     pass
 
@@ -28,13 +31,66 @@ class MenuScreen(Screen):
 class SettingsScreen(Screen):
     pass
 
+class HoldingScreen(Screen):
+    def __init__(self, spot, **kwargs):
+        super(HoldingScreen, self).__init__(**kwargs)
+        self.spot = spot
+
+        layout = BoxLayout(orientation='vertical')
+
+        for i in range(5):
+            spot += 1
+            song = song_list[spot]
+            button_item = SongButton(text=song.name)
+            layout.add_widget(button_item)
+
+        arrow_layout = BoxLayout(orientation='horizontal')
+        left_arrow = Button(text='Back')
+        right_arrow = Button(text='Next')
+        arrow_layout.add_widget(left_arrow)
+        arrow_layout.add_widget(right_arrow)
+        layout.add_widget(arrow_layout)
+
+        self.add_widget(layout)
+
+
 class LibraryScreen(Screen):
     def __init__(self, **kwargs):
         super(LibraryScreen, self).__init__(**kwargs)
 
-        for song in song_list:
+        layout = BoxLayout(orientation='vertical')
+
+        spot = 0
+
+        for i in range(0,5):
+            song = song_list[spot]
             button_item = SongButton(text=song.name)
-            self.add_widget(button_item)
+            layout.add_widget(button_item)
+            spot += 1
+
+        arrow_layout = BoxLayout(orientation='horizontal')
+        left_arrow = Button(text='Back')
+        right_arrow = Button(text='Next')
+        arrow_layout.add_widget(left_arrow)
+        arrow_layout.add_widget(right_arrow)
+        layout.add_widget(arrow_layout)
+
+        self.add_widget(layout)
+
+        # num_pages = len(song_list) % 5
+        # if num_pages != 0:
+        #     num_pages += 1
+        #
+        # spot = 0
+        #
+        # library_screen_manager = ScreenManager()
+        #
+        # for page in range(num_pages):
+        #     hold = HoldingScreen(name='Page'+str(page), orientation='vertical', spot=spot)
+        #     library_screen_manager.add_widget(hold)
+        #
+        # library_screen_manager.current = 'Page1'
+
 
 class ButtonListItem(BoxLayout):
     def __init__(self, text, **kwargs):
@@ -49,9 +105,12 @@ class ButtonListItem(BoxLayout):
     def button_click(self, instance):
         print(f"clicked: {instance.text}")
 
+
 class SongButton(Button):
     def __init__(self, text, **kwargs):
         super(SongButton, self).__init__(**kwargs)
+        self.text = text
+
 
 class PlayScreen(Screen):
     # SO WE NEED TO KEEP TRACK OF WHERE YOU LEFT OFF IN LAST PLAYLIST
@@ -92,9 +151,14 @@ class PlayScreen(Screen):
         # Load audio data for precise playback control
         self.playback_data, _ = soundfile.read(self.song_list[self.dex].path, dtype='int16')
 
+    def find_song(self, title):
+        i = [idx for idx, instance in enumerate(song_list) if title in instance.path]
+        return i
+
     def play_song(self, select=None):
         if select is not None:
-            self.dex = select
+            # Find the song with text
+            self.dex = self.find_song(select)[0]
 
         print('start', self.start_time)
         if not self.playing:
@@ -161,7 +225,6 @@ def build_song_list(self):
             song_path = os.path.join(song_folder_path, filename)
             song = Song(text=song_path)
             song_list.append(song)
-
 
 
 if __name__ == '__main__':

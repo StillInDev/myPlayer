@@ -47,8 +47,7 @@
 
 <LibraryScreen>:
     orientation: 'vertical'
-    BoxLayout:
-        orientation: 'vertical'
+
 
 <ButtonListItem>:
     orientation: 'vertical'
@@ -60,7 +59,7 @@
 <SongButton>:
     on_release:
         app.root.current = 'playMusicScreen'
-        app.playMusicScreen.play_song(select=2)
+        app.playMusicScreen.play_song(select=root.text)
 
 
 <SettingsScreen>:
