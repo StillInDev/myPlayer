@@ -1,4 +1,5 @@
 <MenuScreen>:
+    orientation: 'vertical'
     BoxLayout:
         orientation: 'vertical'
         Label:
@@ -10,7 +11,44 @@
             text: 'Go to Play'
             on_release: app.root.current = 'play'
 
+<PlayScreen>:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                id: back_button
+                text: 'Back'
+                on_release: root.back_song()
+            Button:
+                id: play_button     # Add an id to the button
+                text: 'Play'
+                background_color: 1, 0, 0, 1  # Initial color (red)
+                on_press:
+                    self.background_color = 0, 1, 0, 1  # On press (green)
+                    root.play_song()
+                on_release: self.background_color = 1, 0, 0, 1  # On release (back to red)
+            Button:
+                id: skip_button
+                text: 'Next'
+                on_release: root.skip_song()
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: 'horizontal'
+            Button:
+                id: home_button
+                text: 'Home'
+                on_release: app.root.current = 'menu'
+
+<LibraryScreen>:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'vertical'
+
+
 <SettingsScreen>:
+    orientation: 'vertical'
     BoxLayout:
         orientation: 'vertical'
         Label:
@@ -19,17 +57,4 @@
             text: 'Go to Menu'
             on_release: app.root.current = 'menu'
 
-<PlayScreen>:
-    BoxLayout:
-        orientation: 'horizontal'
-        Button:
-            id: play_button     # Add an id to the button
-            text: 'Play'
-            background_color: 1, 0, 0, 1  # Initial color (red)
-            on_press:
-                self.background_color = 0, 1, 0, 1  # On press (green)
-                root.play_song()
-            on_release: self.background_color = 1, 0, 0, 1  # On release (back to red)
-        Button:
-            text: 'Home'
-            on_release: app.root.current = 'menu'
+
