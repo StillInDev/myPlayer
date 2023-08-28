@@ -6,7 +6,11 @@ import soundfile
 import time
 
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
+
+from myPlayer.myPlayer.scripts.songs import Song
 
 # Holds all songs
 song_list = []
@@ -25,7 +29,29 @@ class SettingsScreen(Screen):
     pass
 
 class LibraryScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super(LibraryScreen, self).__init__(**kwargs)
+
+        for song in song_list:
+            button_item = SongButton(text=song.name)
+            self.add_widget(button_item)
+
+class ButtonListItem(BoxLayout):
+    def __init__(self, text, **kwargs):
+        super(ButtonListItem, self).__init__(**kwargs)
+        self.orientation = 'horizontal'
+        self.spacing = 10
+        self.button = Button(text=text)
+        self.add_widget(self.button)
+
+        self.button.bind(on_release=self.button_click)
+
+    def button_click(self, instance):
+        print(f"clicked: {instance.text}")
+
+class SongButton(Button):
+    def __init__(self, text, **kwargs):
+        super(SongButton, self).__init__(**kwargs)
 
 class PlayScreen(Screen):
     # SO WE NEED TO KEEP TRACK OF WHERE YOU LEFT OFF IN LAST PLAYLIST
@@ -36,7 +62,7 @@ class PlayScreen(Screen):
         self.played = False
         self.playback_data = None
         self.playback_position = 0
-        self.dex = index
+        self.dex = 0
         self.song_list = song_list
         self.reload = True
 
@@ -61,12 +87,15 @@ class PlayScreen(Screen):
 
     def load_song(self):
         pygame.mixer.init()
-        pygame.mixer.music.load(self.song_list[self.dex])
+        pygame.mixer.music.load(self.song_list[self.dex].path)
 
         # Load audio data for precise playback control
-        self.playback_data, _ = soundfile.read(self.song_list[self.dex], dtype='int16')
+        self.playback_data, _ = soundfile.read(self.song_list[self.dex].path, dtype='int16')
 
-    def play_song(self):
+    def play_song(self, select=None):
+        if select is not None:
+            self.dex = select
+
         print('start', self.start_time)
         if not self.playing:
             # MIGHT HAVE AN ISSUE WITH A CHANGE IN SONG
@@ -101,19 +130,21 @@ class PlayScreen(Screen):
             print("Elapsed Time:", self.playback_position / SAMPLE_RATE)
 
 
-
 # Main class
 class MyApp(App):
     # Starts loading the application
+
     def build(self):
         build_song_list(self)
         print(song_list)
+
+        self.playMusicScreen = PlayScreen(name='playMusicScreen')
 
         # Loads screen
         sm = ScreenManager()
         sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(SettingsScreen(name='settings'))
-        sm.add_widget(PlayScreen(name='play'))
+        sm.add_widget(self.playMusicScreen)
         sm.add_widget(LibraryScreen(name='library'))
 
         return sm
@@ -128,8 +159,9 @@ def build_song_list(self):
     for filename in os.listdir(song_folder_path):
         if filename.endswith('.mp3'):
             song_path = os.path.join(song_folder_path, filename)
-            song_list.append(song_path)
-            # self.song_list.append(os.path.join(song_folder_path, filename))    ->     This adds the path
+            song = Song(text=song_path)
+            song_list.append(song)
+
 
 
 if __name__ == '__main__':

@@ -10,17 +10,21 @@
         Button:
             text: 'Go to Play'
             on_release: app.root.current = 'play'
+        Button:
+            text: 'Go to Library'
+            on_release: app.root.current = 'library'
 
 <PlayScreen>:
     orientation: 'vertical'
     BoxLayout:
+        id: PlayMusicScreen
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
             Button:
                 id: back_button
                 text: 'Back'
-                on_release: root.back_song()
+                on_press: root.back_song()
             Button:
                 id: play_button     # Add an id to the button
                 text: 'Play'
@@ -32,7 +36,7 @@
             Button:
                 id: skip_button
                 text: 'Next'
-                on_release: root.skip_song()
+                on_press: root.skip_song()
         BoxLayout:
             size_hint_y: 0.3
             orientation: 'horizontal'
@@ -45,6 +49,18 @@
     orientation: 'vertical'
     BoxLayout:
         orientation: 'vertical'
+
+<ButtonListItem>:
+    orientation: 'vertical'
+    spacing: 10
+    Button:
+        on_release:
+            app.root.current = 'playMusicScreen'
+
+<SongButton>:
+    on_release:
+        app.root.current = 'playMusicScreen'
+        app.playMusicScreen.play_song(select=2)
 
 
 <SettingsScreen>:
