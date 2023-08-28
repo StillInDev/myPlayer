@@ -9,6 +9,10 @@
         Button:
             text: 'Go to Play'
             on_release: app.root.current = 'play'
+        Button:
+            text: 'Go to Edit'
+            on_release: app.root.current = 'edit'
+               
 
 <SettingsScreen>:
     BoxLayout:
@@ -21,7 +25,17 @@
 
 <PlayScreen>:
     BoxLayout:
-        orientation: 'horizontal'
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'vertical'
+            id: progress_layout  # Add an id to this layout
+            size_hint_y: None
+            height: dp(20)
+            ProgressBar:
+                id: progress_bar
+                on_touch_down: root.on_progress_touch_down(args[1])
+                on_touch_move: root.on_progress_touch_move(args[1])
+                on_touch_up: root.on_progress_touch_up(args[1])
         Button:
             id: play_button     # Add an id to the button
             text: 'Play'
@@ -31,5 +45,56 @@
                 root.play_song()
             on_release: self.background_color = 1, 0, 0, 1  # On release (back to red)
         Button:
+            text: "Skip"
+            on_release: root.skip_song()
+        Button:
             text: 'Home'
             on_release: app.root.current = 'menu'
+        
+
+<EditScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Welcome to the Edit Screen!'
+        Button:
+            text: 'Trim'
+            on_release: app.root.current = 'trim'
+        Button:
+            text: 'Quiet'
+            on_release: app.root.current = 'menu'
+        Button:
+            text: 'Slow'
+            on_release: app.root.current = 'menu'
+        Button:
+            text: 'Speed'
+            on_release: app.root.current = 'menu'
+
+<TrimScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Welcome to the Trim Screen!'
+        ScrollView:
+            BoxLayout:
+                id: song_list_container
+                orientation: 'vertical'
+        Button:
+            text: 'Home'
+            on_release: app.root.current = 'menu'
+
+<QuietScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Welcome to the Quiet Screen!'
+<SpeedScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Welcome to the Speed Screen!'
+<Slowcreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Welcome to the Slow Screen!'
