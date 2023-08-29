@@ -27,6 +27,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
+from pydub import AudioSegment
 
 from myPlayer.myPlayer.scripts.songs import Song
 from myPlayer.myPlayer.scripts.library import LibraryScreen
@@ -255,13 +256,12 @@ class PlayScreen(Screen):
 
     def find_song(self, title):
         i = [idx for idx, instance in enumerate(song_list) if title in instance.path]
-        return i
-
+        return i[0]
     
-     def play_song(self, select=None):
+    def play_song(self, select=None):
         if select is not None:
             # Find the song with text
-            self.dex = self.find_song(select)[0]
+            self.dex = self.find_song(select)
 
         print('start', self.start_time)
         if not self.playing:
@@ -278,10 +278,10 @@ class PlayScreen(Screen):
             sounddevice.play(self.playback_data[self.playback_position:], SAMPLE_RATE)
 
             pygame.mixer.init()
-            pygame.mixer.music.load(song_list[index])
+            pygame.mixer.music.load(song_list[self.dex].path)
 
             # Get song length in seconds and store it as an attribute
-            self.song_length_seconds = pygame.mixer.Sound(song_list[index]).get_length()
+            self.song_length_seconds = pygame.mixer.Sound(song_list[self.dex].path).get_length()
             print("Song Length:", self.song_length_seconds, "seconds")
 
             # Remove the old progress_bar if present
@@ -366,20 +366,12 @@ class MyApp(App):
 
         sm.add_widget(self.playMusicScreen)
         sm.add_widget(self.libraryScreen)
-
-
-
-
         sm.add_widget(PlayScreen(name='play'))
         sm.add_widget(EditScreen(name='edit'))
         sm.add_widget(TrimScreen(name='trim'))
         sm.add_widget(QuietScreen(name='quiet'))
         sm.add_widget(SlowScreen(name='slow'))
         sm.add_widget(SpeedScreen(name='speed'))
-        
-
-
-
 
         return sm
 
