@@ -11,6 +11,7 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from myPlayer.myPlayer.scripts.songs import Song
+from myPlayer.myPlayer.scripts.library import LibraryScreen
 
 # Holds all songs
 song_list = []
@@ -23,94 +24,12 @@ index = 0
 
 '''#---------------SCREENS---------------#'''
 
-
 class MenuScreen(Screen):
     pass
 
 
 class SettingsScreen(Screen):
     pass
-
-class HoldingScreen(Screen):
-    def __init__(self, spot, **kwargs):
-        super(HoldingScreen, self).__init__(**kwargs)
-        self.spot = spot
-
-        layout = BoxLayout(orientation='vertical')
-
-        for i in range(5):
-            spot += 1
-            song = song_list[spot]
-            button_item = SongButton(text=song.name)
-            layout.add_widget(button_item)
-
-        arrow_layout = BoxLayout(orientation='horizontal')
-        left_arrow = Button(text='Back')
-        right_arrow = Button(text='Next')
-        arrow_layout.add_widget(left_arrow)
-        arrow_layout.add_widget(right_arrow)
-        layout.add_widget(arrow_layout)
-
-        self.add_widget(layout)
-
-
-class LibraryScreen(Screen):
-    def __init__(self, **kwargs):
-        super(LibraryScreen, self).__init__(**kwargs)
-
-        layout = BoxLayout(orientation='vertical')
-
-        spot = 0
-
-        for i in range(0,5):
-            song = song_list[spot]
-            button_item = SongButton(text=song.name)
-            layout.add_widget(button_item)
-            spot += 1
-
-        arrow_layout = BoxLayout(orientation='horizontal')
-        left_arrow = Button(text='Back')
-        right_arrow = Button(text='Next')
-        arrow_layout.add_widget(left_arrow)
-        arrow_layout.add_widget(right_arrow)
-        layout.add_widget(arrow_layout)
-
-        self.add_widget(layout)
-
-        # num_pages = len(song_list) % 5
-        # if num_pages != 0:
-        #     num_pages += 1
-        #
-        # spot = 0
-        #
-        # library_screen_manager = ScreenManager()
-        #
-        # for page in range(num_pages):
-        #     hold = HoldingScreen(name='Page'+str(page), orientation='vertical', spot=spot)
-        #     library_screen_manager.add_widget(hold)
-        #
-        # library_screen_manager.current = 'Page1'
-
-
-class ButtonListItem(BoxLayout):
-    def __init__(self, text, **kwargs):
-        super(ButtonListItem, self).__init__(**kwargs)
-        self.orientation = 'horizontal'
-        self.spacing = 10
-        self.button = Button(text=text)
-        self.add_widget(self.button)
-
-        self.button.bind(on_release=self.button_click)
-
-    def button_click(self, instance):
-        print(f"clicked: {instance.text}")
-
-
-class SongButton(Button):
-    def __init__(self, text, **kwargs):
-        super(SongButton, self).__init__(**kwargs)
-        self.text = text
-
 
 class PlayScreen(Screen):
     # SO WE NEED TO KEEP TRACK OF WHERE YOU LEFT OFF IN LAST PLAYLIST
@@ -203,13 +122,14 @@ class MyApp(App):
         print(song_list)
 
         self.playMusicScreen = PlayScreen(name='playMusicScreen')
+        self.libraryScreen = LibraryScreen(name='library', song_list=song_list)
 
         # Loads screen
         sm = ScreenManager()
         sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(SettingsScreen(name='settings'))
         sm.add_widget(self.playMusicScreen)
-        sm.add_widget(LibraryScreen(name='library'))
+        sm.add_widget(self.libraryScreen)
 
         return sm
 

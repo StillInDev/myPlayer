@@ -45,10 +45,6 @@
                 text: 'Home'
                 on_release: app.root.current = 'menu'
 
-<LibraryScreen>:
-    orientation: 'vertical'
-
-
 <ButtonListItem>:
     orientation: 'vertical'
     spacing: 10
@@ -61,6 +57,13 @@
         app.root.current = 'playMusicScreen'
         app.playMusicScreen.play_song(select=root.text)
 
+<BackArrow>:
+    on_press:
+        app.libraryScreen.update_shown_songs(-1)
+
+<FrontArrow>:
+    on_press:
+        app.libraryScreen.update_shown_songs(1)
 
 <SettingsScreen>:
     orientation: 'vertical'
