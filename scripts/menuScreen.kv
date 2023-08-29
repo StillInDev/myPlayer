@@ -1,0 +1,33 @@
+<MenuScreen>:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Welcome to the Menu Screen!'
+        Button:
+            text: 'Go to Settings'
+            on_release: app.root.current = 'settings'
+        Button:
+            text: 'Go to Play'
+            on_release: app.root.current = 'play'
+        Button:
+            text: 'Go to Library'
+            on_release: app.root.current = 'library'
+        Button:
+            text: 'Go to Edit'
+            on_release: app.root.current = 'edit'
+
+<SongButton>:
+    on_release:
+        app.root.current = 'playMusicScreen'
+        app.playMusicScreen.play_song(select=root.text)
+
+<BackArrow>:
+    on_press:
+        app.libraryScreen.update_shown_songs(-1)
+
+<FrontArrow>:
+    on_press:
+        app.libraryScreen.update_shown_songs(1)
+
+

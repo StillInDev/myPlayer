@@ -1,54 +1,3 @@
-<MenuScreen>:
-    orientation: 'vertical'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Welcome to the Menu Screen!'
-        Button:
-            text: 'Go to Settings'
-            on_release: app.root.current = 'settings'
-        Button:
-            text: 'Go to Play'
-            on_release: app.root.current = 'play'
-        Button:
-            text: 'Go to Library'
-            on_release: app.root.current = 'library'
-        Button:
-            text: 'Go to Edit'
-            on_release: app.root.current = 'edit'
-
-
-<ButtonListItem>:
-    orientation: 'vertical'
-    spacing: 10
-    Button:
-        on_release:
-            app.root.current = 'playMusicScreen'
-
-<SongButton>:
-    on_release:
-        app.root.current = 'playMusicScreen'
-        app.playMusicScreen.play_song(select=root.text)
-
-<BackArrow>:
-    on_press:
-        app.libraryScreen.update_shown_songs(-1)
-
-<FrontArrow>:
-    on_press:
-        app.libraryScreen.update_shown_songs(1)
-
-
-<SettingsScreen>:
-    orientation: 'vertical'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Welcome to the Settings Screen!'
-        Button:
-            text: 'Go to Menu'
-            on_release: app.root.current = 'menu'
-
 <PlayScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -76,7 +25,7 @@
         Button:
             text: 'Home'
             on_release: app.root.current = 'menu'
-        
+
 
 <EditScreen>:
     BoxLayout:
@@ -108,6 +57,7 @@
         Button:
             text: 'Home'
             on_release: app.root.current = 'menu'
+
 <TrimPopup>:
     BoxLayout:
         orientation: 'vertical'
@@ -128,6 +78,7 @@
         Button:
             text: "Trim"
             on_release: root.trim_song()
+
 <QuietPopup>:
     BoxLayout:
         orientation: 'vertical'
@@ -149,8 +100,6 @@
             text: "Apply"
             on_release: root.quiet_song()
 
-    
-
 <QuietScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -163,12 +112,13 @@
         Button:
             text: 'Home'
             on_release: app.root.current = 'menu'
+
 <SpeedScreen>:
     BoxLayout:
         orientation: 'vertical'
         Label:
             text: 'Welcome to the Speed Screen!'
-<Slowcreen>:
+<SlowScreen>:
     BoxLayout:
         orientation: 'vertical'
         Label:
