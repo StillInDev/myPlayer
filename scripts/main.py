@@ -258,7 +258,7 @@ class PlayScreen(Screen):
         return i
 
     
-     def play_song(self, select=None):
+    def play_song(self, select=None):
         if select is not None:
             # Find the song with text
             self.dex = self.find_song(select)[0]
