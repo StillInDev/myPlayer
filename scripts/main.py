@@ -18,9 +18,9 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 from pydub import AudioSegment
 
-from scripts.playscreen import *
-from scripts.songs import Song
-from scripts.library import LibraryScreen
+from myPlayer.scripts.playscreen import *
+from myPlayer.scripts.songs import Song
+from myPlayer.scripts.library import LibraryScreen
 
 from kivy.lang import Builder
 
