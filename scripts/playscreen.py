@@ -76,26 +76,26 @@ class PlayScreen(Screen):
             self.dex -= 1
         self.play_song()
 
-    # def on_progress_touch_down(self, touch):
-    #     self.dragging = True
-    #     self.update_progress_from_touch(touch)
-    #
-    # def on_progress_touch_move(self, touch):
-    #     if self.dragging:
-    #         self.update_progress_from_touch(touch)
-    #
-    # def on_progress_touch_up(self, touch):
-    #     if self.dragging:
-    #         self.update_progress_from_touch(touch)
-    #         self.dragging = False
-    #
-    # def update_progress_from_touch(self, touch):
-    #     if self.progress_bar.collide_point(*touch.pos):
-    #         touch_x = touch.pos[0] - self.progress_bar.x
-    #         normalized_progress = touch_x / self.progress_bar.width
-    #         self.progress = normalized_progress * self.song_length_seconds
-    #         self.progress_bar.value = self.progress
-    #         pygame.mixer.music.set_pos(self.progress)
+    def on_progress_touch_down(self, touch):
+        self.dragging = True
+        self.update_progress_from_touch(touch)
+
+    def on_progress_touch_move(self, touch):
+        if self.dragging:
+            self.update_progress_from_touch(touch)
+
+    def on_progress_touch_up(self, touch):
+        if self.dragging:
+            self.update_progress_from_touch(touch)
+            self.dragging = False
+
+    def update_progress_from_touch(self, touch):
+        if self.progress_bar.collide_point(*touch.pos):
+            touch_x = touch.pos[0] - self.progress_bar.x
+            normalized_progress = touch_x / self.progress_bar.width
+            self.progress = normalized_progress * self.song_length_seconds
+            self.progress_bar.value = self.progress
+            pygame.mixer.music.set_pos(self.progress)
 
     def load_song(self):
         song = self.song_list[self.dex]
