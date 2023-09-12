@@ -72,6 +72,9 @@ class PlayScreen(Screen):
         # Just add one
         else:
             self.dex -= 1
+        self.reset()
+
+        self.load_song()
         self.play_song()
 
     def on_progress_touch_down(self, touch):

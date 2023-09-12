@@ -3,9 +3,9 @@ from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen
 
 
-class LibraryScreen(Screen):
+class SongSelectionScreen(Screen):
     def __init__(self, song_list, **kwargs):
-        super(LibraryScreen, self).__init__(**kwargs)
+        super(SongSelectionScreen, self).__init__(**kwargs)
 
         self.song_list = song_list
 
@@ -27,7 +27,9 @@ class LibraryScreen(Screen):
         self.arrow_layout = BoxLayout(orientation='horizontal', size_hint_y=.15)
         left_arrow = BackArrow(text='Back')
         right_arrow = FrontArrow(text='Next')
+        home_button = HomeButton(text='Home')
         self.arrow_layout.add_widget(left_arrow)
+        self.arrow_layout.add_widget(home_button)
         self.arrow_layout.add_widget(right_arrow)
         layout.add_widget(self.arrow_layout)
 
@@ -73,6 +75,12 @@ class BackArrow(Button):
     def __init__(self, **kwargs):
         super(BackArrow, self).__init__(**kwargs)
 
+
 class FrontArrow(Button):
     def __init__(self, **kwargs):
         super(FrontArrow, self).__init__(**kwargs)
+
+
+class HomeButton(Button):
+    def __init__(self, **kwargs):
+        super(HomeButton, self).__init__(**kwargs)

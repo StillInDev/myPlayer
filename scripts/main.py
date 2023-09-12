@@ -20,13 +20,14 @@ from pydub import AudioSegment
 
 from myPlayer.scripts.playscreen import *
 from myPlayer.scripts.songs import Song
-from myPlayer.scripts.library import LibraryScreen
+from myPlayer.scripts.songSelectionScreen import SongSelectionScreen
 
 from kivy.lang import Builder
 
 # Combines all the .kv files specified
 Builder.load_file('menuScreen.kv')
 Builder.load_file('playScreen.kv')
+Builder.load_file('songSelectionScreen.kv')
 
 # Holds all allSongs
 song_list = []
@@ -44,7 +45,6 @@ class MenuScreen(Screen):
     pass
 
 
-
 # Main class
 class MyApp(App):
     # Starts loading the application
@@ -54,13 +54,14 @@ class MyApp(App):
         print(song_list)
 
         self.playMusicScreen = PlayScreen(name='playMusicScreen', song_list=song_list, sample_rate=SAMPLE_RATE)
-        self.libraryScreen = LibraryScreen(name='library', song_list=song_list)
+        self.songSelectionScreen = SongSelectionScreen(name='library', song_list=song_list)
+        self.menuScreen = MenuScreen(name='menuScreen')
 
         # Loads screen
         sm = ScreenManager()
-        sm.add_widget(MenuScreen(name='menu'))
+        sm.add_widget(self.menuScreen)
         sm.add_widget(self.playMusicScreen)
-        sm.add_widget(self.libraryScreen)
+        sm.add_widget(self.songSelectionScreen)
 
         return sm
 

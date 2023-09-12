@@ -1,0 +1,17 @@
+<SongButton>:
+    on_release:
+        app.root.current = 'playMusicScreen'
+        app.playMusicScreen.reset()
+        app.playMusicScreen.play_song(select=root.text)
+
+<BackArrow>:
+    on_press:
+        app.songSelectionScreen.update_shown_songs(-1)
+
+<FrontArrow>:
+    on_press:
+        app.songSelectionScreen.update_shown_songs(1)
+
+<HomeButton>:
+    text: 'Home'
+    on_press: app.root.current = 'menuScreen'

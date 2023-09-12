@@ -11,18 +11,4 @@
             text: 'Go to Library'
             on_release: app.root.current = 'library'
 
-<SongButton>:
-    on_release:
-        app.root.current = 'playMusicScreen'
-        app.playMusicScreen.reset()
-        app.playMusicScreen.play_song(select=root.text)
-
-<BackArrow>:
-    on_press:
-        app.libraryScreen.update_shown_songs(-1)
-
-<FrontArrow>:
-    on_press:
-        app.libraryScreen.update_shown_songs(1)
-
 
