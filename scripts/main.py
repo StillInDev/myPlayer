@@ -26,10 +26,9 @@ from kivy.lang import Builder
 
 # Combines all the .kv files specified
 Builder.load_file('menuScreen.kv')
-Builder.load_file('settingScreen.kv')
 Builder.load_file('playScreen.kv')
 
-# Holds all songs
+# Holds all allSongs
 song_list = []
 library_pages = []
 
@@ -60,14 +59,8 @@ class MyApp(App):
         # Loads screen
         sm = ScreenManager()
         sm.add_widget(MenuScreen(name='menu'))
-        sm.add_widget(SettingsScreen(name='settings'))
         sm.add_widget(self.playMusicScreen)
         sm.add_widget(self.libraryScreen)
-        sm.add_widget(EditScreen(name='edit'))
-        sm.add_widget(TrimScreen(name='trim'))
-        sm.add_widget(QuietScreen(name='quiet'))
-        sm.add_widget(SlowScreen(name='slow'))
-        sm.add_widget(SpeedScreen(name='speed'))
 
         return sm
 
@@ -75,9 +68,9 @@ class MyApp(App):
 def build_song_list(self):
     # Get song folder path
     parent_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    song_folder_path = os.path.join(parent_directory, 'songs')
+    song_folder_path = os.path.join(parent_directory,'zongs', 'allSongs')
 
-    # Fill song_list with all songs
+    # Fill song_list with all allSongs
     for filename in os.listdir(song_folder_path):
         if filename.endswith('.mp3'):
             song_path = os.path.join(song_folder_path, filename)
