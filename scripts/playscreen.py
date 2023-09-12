@@ -17,6 +17,7 @@ from kivy.uix.scrollview import ScrollView
 from pydub import AudioSegment
 
 
+
 class PlayScreen(Screen):
     song_name = StringProperty('')
 
@@ -50,6 +51,7 @@ class PlayScreen(Screen):
         self.song_length_seconds = 0.0
         self.prog_ev = None  # Initialize the clock event reference
         self.dragging = False
+        print("reset")
 
     def skip_song(self):
         # If you reach the end of the song_list
@@ -61,9 +63,9 @@ class PlayScreen(Screen):
         else:
             self.dex += 1
 
-        self.reset()
 
-        self.load_song()
+        self.reset()
+        # self.load_song()
         self.play_song()
 
     def back_song(self):
@@ -129,13 +131,10 @@ class PlayScreen(Screen):
 
             if self.playback_data is None or self.reload:
                 self.reload = False
-                self.load_song()
+                self.load_song()  # Load the song if needed
 
             self.start_time = time.time() - self.playback_position / self.sample_rate
             sounddevice.play(self.playback_data[self.playback_position:], self.sample_rate)
-
-            pygame.mixer.init()
-            pygame.mixer.music.load(self.song_list[self.dex].path)
 
             # Get song length in seconds and store it as an attribute
             self.song_length_seconds = pygame.mixer.Sound(self.song_list[self.dex].path).get_length()
@@ -160,7 +159,6 @@ class PlayScreen(Screen):
             self.playback_position += int(elapsed_time * self.sample_rate)  # Convert to samples
             sounddevice.stop()
 
-
     def update_time(self):
         if self.playing:
             elapsed_time = time.time() - self.start_time
@@ -180,8 +178,10 @@ class PlayScreen(Screen):
                 print("incremented")
                 print(self.progress)
             else:
+                self.skip_song()
+                self.reset()
                 self.progress = 0  # Reset value.
-                print("reset")
+                print("progress reset")
                 if self.prog_ev:
                     self.prog_ev.cancel()  # Stop updating.
 
