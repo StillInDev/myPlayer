@@ -1,17 +1,31 @@
+<playlistButton>:
+    on_release:
+        app.songSelectionScreen.select_playlist(name=root.text)
+
+<playlistBackArrow>:
+    on_press:
+        app.songSelectionScreen.update_shown_playlists(-1)
+
+<playlistFrontArrow>:
+    on_press:
+        app.songSelectionScreen.update_shown_playlists(1)
+
 <SongButton>:
     on_release:
         app.root.current = 'playMusicScreen'
         app.playMusicScreen.reset()
         app.playMusicScreen.play_song(select=root.text)
 
-<BackArrow>:
+<SongBackArrow>:
     on_press:
         app.songSelectionScreen.update_shown_songs(-1)
 
-<FrontArrow>:
+<SongFrontArrow>:
     on_press:
         app.songSelectionScreen.update_shown_songs(1)
 
 <HomeButton>:
     text: 'Home'
-    on_press: app.root.current = 'menuScreen'
+    on_press:
+        app.songSelectionScreen.reset()
+        app.root.current = 'menuScreen'

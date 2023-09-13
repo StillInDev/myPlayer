@@ -3,12 +3,32 @@
     BoxLayout:
         orientation: 'vertical'
         Label:
+            size_hint_y: .2
             text: 'Welcome to the Menu Screen!'
-        Button:
-            text: 'Go to Play'
-            on_release: app.root.current = 'playMusicScreen'
-        Button:
-            text: 'Go to Library'
-            on_release: app.root.current = 'library'
+        Label:
+            size_hint_y: .6
+            text: 'menu stuff'
+            canvas.before:
+                Color:
+                    rgba: 1,0,0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: 0, 1, 0, 1
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 1.5
+        BoxLayout:
+            size_hint_y: .2
+            Button:
+                text: 'Home'
+                on_release:
+            Button:
+                text: 'Search'
+                on_release:
+            Button:
+                text: 'Playlist'
+                on_release: app.root.current = 'playlist'
 
 
